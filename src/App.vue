@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {editorSteps} from "./constants/steps.ts";
+import {editorSteps} from "./lib/constants/steps.ts";
 import {ref} from "vue";
 import {cloneDeep} from "lodash-es";
 import GeolocationUpload from "./views/GeolocationUpload.vue";

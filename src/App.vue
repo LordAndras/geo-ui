@@ -4,7 +4,8 @@ import {editorSteps} from "./constants/steps.ts";
 import {ref} from "vue";
 import {cloneDeep} from "lodash-es";
 import GeolocationUpload from "./views/GeolocationUpload.vue";
-// import GeolocationList from "./views/GeolocationList.vue";
+import GeolocationList from "./views/GeolocationList.vue";
+import GeoMap from "./views/GeoMap.vue";
 
 const steps = ref(cloneDeep(editorSteps))
 
@@ -41,132 +42,15 @@ function updateValidity(value: boolean) {
             <div class="e-section__title">Geolocations</div>
           </div>
           <div class="e-section__content">
-            <div style="width: 100vw; height: 50vh" class="e-scrollable" >
-              <div class="e-scrollable__content">
-                <ul class="e-list e-list-bulleted">
-                  <li class="e-list__item">
-                    Item 1
-                  </li>
-                  <li class="e-list__item">
-                    Item 2
-                  </li>
-                  <li class="e-list__item">
-                    Item 3
-                  </li>
-                  <li class="e-list__item">
-                    Item 4
-                  </li>
-                  <li class="e-list__item">
-                    Item 1
-                  </li>
-                  <li class="e-list__item">
-                    Item 2
-                  </li>
-                  <li class="e-list__item">
-                    Item 3
-                  </li>
-                  <li class="e-list__item">
-                    Item 4
-                  </li>
-                  <li class="e-list__item">
-                    Item 1
-                  </li>
-                  <li class="e-list__item">
-                    Item 2
-                  </li>
-                  <li class="e-list__item">
-                    Item 3
-                  </li>
-                  <li class="e-list__item">
-                    Item 4
-                  </li>
-                  <li class="e-list__item">
-                    Item 1
-                  </li>
-                  <li class="e-list__item">
-                    Item 2
-                  </li>
-                  <li class="e-list__item">
-                    Item 3
-                  </li>
-                  <li class="e-list__item">
-                    Item 4
-                  </li>
-                  <li class="e-list__item">
-                    Item 1
-                  </li>
-                  <li class="e-list__item">
-                    Item 2
-                  </li>
-                  <li class="e-list__item">
-                    Item 3
-                  </li>
-                  <li class="e-list__item">
-                    Item 4
-                  </li>
-                  <li class="e-list__item">
-                    Item 1
-                  </li>
-                  <li class="e-list__item">
-                    Item 2
-                  </li>
-                  <li class="e-list__item">
-                    Item 3
-                  </li>
-                  <li class="e-list__item">
-                    Item 4
-                  </li>
-                  <li class="e-list__item">
-                    Item 1
-                  </li>
-                  <li class="e-list__item">
-                    Item 2
-                  </li>
-                  <li class="e-list__item">
-                    Item 3
-                  </li>
-                  <li class="e-list__item">
-                    Item 4
-                  </li>
-                  <li class="e-list__item">
-                    Item 1
-                  </li>
-                  <li class="e-list__item">
-                    Item 2
-                  </li>
-                  <li class="e-list__item">
-                    Item 3
-                  </li>
-                  <li class="e-list__item">
-                    Item 4
-                  </li>
-                </ul>
-              </div>
-
-            </div>
-
+            <GeolocationList/>
           </div>
         </div>
         <section class="e-layout__section e-padding-l">
           <div class="e-section__header">
             <div class="e-section__title">Edit geolocations</div>
           </div>
-          <div class="e-section__content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis odio sequi
-            consectetur perspiciatis, voluptate! Quasi velit ad, mollitia maxime doloribus est! Asperiores cupiditate
-            illum non distinctio deleniti dolorem impedit. Eum. Lorem ipsum dolor sit amet, consectetur adipisicing
-            elit.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis odio sequi
-            consectetur perspiciatis, voluptate! Quasi velit ad, mollitia maxime doloribus est! Asperiores cupiditate
-            illum non distinctio deleniti dolorem impedit. Eum. Lorem ipsum dolor sit amet, consectetur adipisicing
-            elit.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis odio sequi
-            consectetur perspiciatis, voluptate! Quasi velit ad, mollitia maxime doloribus est! Asperiores cupiditate
-            illum non distinctio deleniti dolorem impedit. Eum. Lorem ipsum dolor sit amet, consectetur adipisicing
-            elit.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis odio sequi
-            consectetur perspiciatis, voluptate! Quasi velit ad, mollitia maxime doloribus est! Asperiores cupiditate
-            illum non distinctio deleniti dolorem impedit. Eum. Lorem ipsum dolor sit amet, consectetur adipisicing
-            elit.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis odio sequi
-            consectetur perspiciatis, voluptate! Quasi velit ad, mollitia maxime doloribus est! Asperiores cupiditate
-            illum non distinctio deleniti dolorem impedit. Eum. Lorem ipsum dolor sit amet, consectetur adipisicing
-            elit.
+          <div class="e-section__content">
+            <GeoMap/>
           </div>
         </section>
       </section>

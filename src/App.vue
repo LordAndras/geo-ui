@@ -13,7 +13,11 @@ function goToStep(index: number) {
   })
 }
 
-const csvError = ref(true)
+const isCsvValid = ref(true)
+
+function updateValidity(value: boolean) {
+  isCsvValid.value = value
+}
 
 </script>
 
@@ -27,7 +31,7 @@ const csvError = ref(true)
     </header>
     <main class="e-layout__content e-layout__content-form">
       <section v-if="steps[0].selected" class="e-layout__section e-padding-l">
-        <GeolocationUpload :is-valid="csvError" v-model="csvError"/>
+        <GeolocationUpload :is-valid="isCsvValid" @upload-success="updateValidity(true)" @upload-error="updateValidity(false)"/>
       </section>
       <section v-if="steps[1].selected" class="e-layout__section e-padding-l">
         <div class="e-section__header">
@@ -50,7 +54,7 @@ const csvError = ref(true)
         </div>
       </section>
       <e-step-bar floating>
-        <e-step v-for="step in steps" :key="step.toString()" :label="step.label" :disabled="!csvError" @trigger="goToStep(step.index)"
+        <e-step v-for="step in steps" :key="step.toString()" :label="step.label" :disabled="!isCsvValid" @trigger="goToStep(step.index)"
                 :selected="`${step.selected}`"></e-step>
       </e-step-bar>
     </main>

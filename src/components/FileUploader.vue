@@ -9,15 +9,15 @@ withDefaults(defineProps<Props>(), {
 })
 const emit = defineEmits<{
   (event: 'fileUpload', content: string, filename: string): void
-  (event: 'fileUploadError', error: string): void
+  (event: 'fileUploadError'): void
 }>()
 
 const uploadEventListener = (files: FileList) => {
   const selectedFile: File = files[0]
   if (
-      selectedFile.type !== 'application/x-csv'
+      selectedFile.type !== 'text/csv'
   ) {
-    return emit('fileUploadError', 'wrong file format')
+    return emit('fileUploadError')
   }
   const reader = new FileReader()
   reader.readAsDataURL(selectedFile)
@@ -25,7 +25,7 @@ const uploadEventListener = (files: FileList) => {
     if (reader.result && typeof reader.result === 'string') {
       emit('fileUpload', reader.result.split(',')[1], selectedFile.name)
     } else {
-      return emit('fileUploadError', 'wrong type')
+      return emit('fileUploadError')
     }
   }
 }

@@ -9,11 +9,16 @@ interface Props {
 defineProps<Props>()
 
 const onUploadError = () => {
-  emit('update:model-value', false)
+  emit('uploadError')
+}
+
+const onFileUpload = () => {
+  emit('uploadSuccess')
 }
 
 const emit = defineEmits<{
-  (event: 'update:model-value', value: boolean): void
+  (event: 'uploadError'): void
+  (event: 'uploadSuccess'): void
 }>()
 
 </script>
@@ -23,10 +28,11 @@ const emit = defineEmits<{
     <div class="e-section__title">Upload Geolocations CSV</div>
   </div>
   <div class="e-section__content">
-    <FileUploader :disabled="false" @file-upload-error="onUploadError"></FileUploader>
+    <FileUploader :disabled="false" @file-upload="onFileUpload" @file-upload-error="onUploadError"></FileUploader>
   </div>
   <span v-if="!isValid" class="e-field__message e-field__message-error">
         <span>{{ 'This file is not a CSV.' }}</span>
       </span>
+  <pre>{{ isValid}}</pre>
 </template>
 

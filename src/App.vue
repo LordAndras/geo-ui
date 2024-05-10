@@ -4,6 +4,7 @@ import {editorSteps} from "./constants/steps.ts";
 import {ref} from "vue";
 import {cloneDeep} from "lodash-es";
 import GeolocationUpload from "./views/GeolocationUpload.vue";
+// import GeolocationList from "./views/GeolocationList.vue";
 
 const steps = ref(cloneDeep(editorSteps))
 
@@ -29,19 +30,145 @@ function updateValidity(value: boolean) {
       </a>
       <h1 class="e-layout__title">Geolocations</h1>
     </header>
-    <main class="e-layout__content e-layout__content-form">
+    <main>
       <section v-if="steps[0].selected" class="e-layout__section e-padding-l">
-        <GeolocationUpload :is-valid="isCsvValid" @upload-success="updateValidity(true)" @upload-error="updateValidity(false)"/>
+        <GeolocationUpload :is-valid="isCsvValid" @upload-success="updateValidity(true)"
+                           @upload-error="updateValidity(false)"/>
       </section>
-      <section v-if="steps[1].selected" class="e-layout__section e-padding-l">
-        <div class="e-section__header">
-          <div class="e-section__title">Edit geolocations</div>
+      <section v-if="steps[1].selected" class="e-layout__content e-padding-l">
+        <div class="e-layout__section e-layout__section-sidebar e-padding-l">
+          <div class="e-section__header">
+            <div class="e-section__title">Geolocations</div>
+          </div>
+          <div class="e-section__content">
+            <div style="width: 100vw; height: 50vh" class="e-scrollable" >
+              <div class="e-scrollable__content">
+                <ul class="e-list e-list-bulleted">
+                  <li class="e-list__item">
+                    Item 1
+                  </li>
+                  <li class="e-list__item">
+                    Item 2
+                  </li>
+                  <li class="e-list__item">
+                    Item 3
+                  </li>
+                  <li class="e-list__item">
+                    Item 4
+                  </li>
+                  <li class="e-list__item">
+                    Item 1
+                  </li>
+                  <li class="e-list__item">
+                    Item 2
+                  </li>
+                  <li class="e-list__item">
+                    Item 3
+                  </li>
+                  <li class="e-list__item">
+                    Item 4
+                  </li>
+                  <li class="e-list__item">
+                    Item 1
+                  </li>
+                  <li class="e-list__item">
+                    Item 2
+                  </li>
+                  <li class="e-list__item">
+                    Item 3
+                  </li>
+                  <li class="e-list__item">
+                    Item 4
+                  </li>
+                  <li class="e-list__item">
+                    Item 1
+                  </li>
+                  <li class="e-list__item">
+                    Item 2
+                  </li>
+                  <li class="e-list__item">
+                    Item 3
+                  </li>
+                  <li class="e-list__item">
+                    Item 4
+                  </li>
+                  <li class="e-list__item">
+                    Item 1
+                  </li>
+                  <li class="e-list__item">
+                    Item 2
+                  </li>
+                  <li class="e-list__item">
+                    Item 3
+                  </li>
+                  <li class="e-list__item">
+                    Item 4
+                  </li>
+                  <li class="e-list__item">
+                    Item 1
+                  </li>
+                  <li class="e-list__item">
+                    Item 2
+                  </li>
+                  <li class="e-list__item">
+                    Item 3
+                  </li>
+                  <li class="e-list__item">
+                    Item 4
+                  </li>
+                  <li class="e-list__item">
+                    Item 1
+                  </li>
+                  <li class="e-list__item">
+                    Item 2
+                  </li>
+                  <li class="e-list__item">
+                    Item 3
+                  </li>
+                  <li class="e-list__item">
+                    Item 4
+                  </li>
+                  <li class="e-list__item">
+                    Item 1
+                  </li>
+                  <li class="e-list__item">
+                    Item 2
+                  </li>
+                  <li class="e-list__item">
+                    Item 3
+                  </li>
+                  <li class="e-list__item">
+                    Item 4
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+
+          </div>
         </div>
-        <div class="e-section__content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis odio sequi
-          consectetur perspiciatis, voluptate! Quasi velit ad, mollitia maxime doloribus est! Asperiores cupiditate
-          illum non distinctio deleniti dolorem impedit. Eum. Lorem ipsum dolor sit amet, consectetur adipisicing
-          elit.
-        </div>
+        <section class="e-layout__section e-padding-l">
+          <div class="e-section__header">
+            <div class="e-section__title">Edit geolocations</div>
+          </div>
+          <div class="e-section__content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis odio sequi
+            consectetur perspiciatis, voluptate! Quasi velit ad, mollitia maxime doloribus est! Asperiores cupiditate
+            illum non distinctio deleniti dolorem impedit. Eum. Lorem ipsum dolor sit amet, consectetur adipisicing
+            elit.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis odio sequi
+            consectetur perspiciatis, voluptate! Quasi velit ad, mollitia maxime doloribus est! Asperiores cupiditate
+            illum non distinctio deleniti dolorem impedit. Eum. Lorem ipsum dolor sit amet, consectetur adipisicing
+            elit.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis odio sequi
+            consectetur perspiciatis, voluptate! Quasi velit ad, mollitia maxime doloribus est! Asperiores cupiditate
+            illum non distinctio deleniti dolorem impedit. Eum. Lorem ipsum dolor sit amet, consectetur adipisicing
+            elit.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis odio sequi
+            consectetur perspiciatis, voluptate! Quasi velit ad, mollitia maxime doloribus est! Asperiores cupiditate
+            illum non distinctio deleniti dolorem impedit. Eum. Lorem ipsum dolor sit amet, consectetur adipisicing
+            elit.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis odio sequi
+            consectetur perspiciatis, voluptate! Quasi velit ad, mollitia maxime doloribus est! Asperiores cupiditate
+            illum non distinctio deleniti dolorem impedit. Eum. Lorem ipsum dolor sit amet, consectetur adipisicing
+            elit.
+          </div>
+        </section>
       </section>
       <section v-if="steps[2].selected" class="e-layout__section e-padding-l">
         <div class="e-section__header">
@@ -54,7 +181,8 @@ function updateValidity(value: boolean) {
         </div>
       </section>
       <e-step-bar floating>
-        <e-step v-for="step in steps" :key="step.toString()" :label="step.label" :disabled="!isCsvValid" @trigger="goToStep(step.index)"
+        <e-step v-for="step in steps" :key="step.toString()" :label="step.label" :disabled="!isCsvValid"
+                @trigger="goToStep(step.index)"
                 :selected="`${step.selected}`"></e-step>
       </e-step-bar>
     </main>

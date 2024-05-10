@@ -33,6 +33,5 @@ const emit = defineEmits<{
   <span v-if="!isValid" class="e-field__message e-field__message-error">
         <span>{{ 'This file is not a CSV.' }}</span>
       </span>
-  <pre>{{ isValid}}</pre>
 </template>
 

@@ -1,14 +1,15 @@
 <script setup lang="ts">
 
+import {FileData, Option} from "../lib/utils/types.ts";
+
 interface Props {
-  disabled?: boolean
+  placeHolder: Option<string>
 }
 
-withDefaults(defineProps<Props>(), {
-  disabled: false
-})
+defineProps<Props>()
+
 const emit = defineEmits<{
-  (event: 'fileUpload', content: string, filename: string): void
+  (event: 'fileUpload', fileData: FileData): void
   (event: 'fileUploadError'): void
 }>()
 
@@ -23,7 +24,7 @@ const uploadEventListener = (files: FileList) => {
   reader.readAsDataURL(selectedFile)
   reader.onload = function () {
     if (reader.result && typeof reader.result === 'string') {
-      emit('fileUpload', reader.result.split(',')[1], selectedFile.name)
+      emit('fileUpload', {content: reader.result.split(',')[1], fileName: selectedFile.name, type: selectedFile.type})
     } else {
       return emit('fileUploadError')
     }
@@ -35,7 +36,7 @@ const uploadEventListener = (files: FileList) => {
   <div>
     <e-upload
         ref="uploadGeolocations"
-        placeholder="Geolocation Import File"
+        :placeholder="placeHolder ?? 'Geolocation Import File'"
         button="Upload"
         @update="uploadEventListener($event.detail.files)"
     ></e-upload>

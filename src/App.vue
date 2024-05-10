@@ -6,6 +6,7 @@ import {cloneDeep} from "lodash-es";
 import GeolocationUpload from "./views/GeolocationUpload.vue";
 import GeolocationList from "./views/GeolocationList.vue";
 import GeoMap from "./views/GeoMap.vue";
+import {useGeoCsvStore} from "./store/geo-csv-store.ts";
 
 const steps = ref(cloneDeep(editorSteps))
 
@@ -15,11 +16,7 @@ function goToStep(index: number) {
   })
 }
 
-const isCsvValid = ref(true)
-
-function updateValidity(value: boolean) {
-  isCsvValid.value = value
-}
+const fileStore = useGeoCsvStore()
 
 </script>
 
@@ -33,8 +30,7 @@ function updateValidity(value: boolean) {
     </header>
     <main>
       <section v-if="steps[0].selected" class="e-layout__section e-padding-l">
-        <GeolocationUpload :is-valid="isCsvValid" @upload-success="updateValidity(true)"
-                           @upload-error="updateValidity(false)"/>
+        <GeolocationUpload :is-valid="fileStore.isValid"/>
       </section>
       <section v-if="steps[1].selected" class="e-layout__content e-padding-l">
         <div class="e-layout__section e-layout__section-sidebar e-padding-l">
@@ -65,7 +61,7 @@ function updateValidity(value: boolean) {
         </div>
       </section>
       <e-step-bar floating>
-        <e-step v-for="step in steps" :key="step.toString()" :label="step.label" :disabled="!isCsvValid"
+        <e-step v-for="step in steps" :key="step.toString()" :label="step.label" :disabled="!fileStore.isValid"
                 @trigger="goToStep(step.index)"
                 :selected="`${step.selected}`"></e-step>
       </e-step-bar>

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 
 import FileUploader from "../components/FileUploader.vue";
+import {useGeoCsvStore} from "../store/geo-csv-store.ts";
+import {FileData} from "../lib/utils/types.ts";
 
 interface Props {
   isValid: boolean
@@ -8,19 +10,17 @@ interface Props {
 
 defineProps<Props>()
 
+const fileStore = useGeoCsvStore()
+
 const onUploadError = () => {
-  emit('uploadError')
+  fileStore.isValid = false
 }
 
-const onFileUpload = () => {
-  emit('uploadSuccess')
+const onFileUpload = (fileData: FileData) => {
+  fileStore.fileName = fileData.fileName
+  fileStore.content = fileData.content
+  fileStore.isValid = fileData.type == "text/csv"
 }
-
-const emit = defineEmits<{
-  (event: 'uploadError'): void
-  (event: 'uploadSuccess'): void
-}>()
-
 </script>
 
 <template>
@@ -28,10 +28,14 @@ const emit = defineEmits<{
     <div class="e-section__title">Upload Geolocations CSV</div>
   </div>
   <div class="e-section__content">
-    <FileUploader :disabled="false" @file-upload="onFileUpload" @file-upload-error="onUploadError"></FileUploader>
+    <FileUploader
+        :placeHolder="fileStore.fileName"
+        @file-upload="onFileUpload"
+        @file-upload-error="onUploadError"
+    ></FileUploader>
   </div>
   <span v-if="!isValid" class="e-field__message e-field__message-error">
         <span>{{ 'This file is not a CSV.' }}</span>
-      </span>
+  </span>
 </template>
 

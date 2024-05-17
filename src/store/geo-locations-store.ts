@@ -1,10 +1,13 @@
 import {defineStore} from "pinia";
-import {ref, Ref} from "vue";
+import {computed, ref, Ref} from "vue";
 import {GeoLocation} from "../lib/utils/geo-csv-parser.ts";
+import {validate} from "../lib/utils/geo-location-validator.ts";
 
 export const useGeoLocationsStore = defineStore('geoLocationsStore', () => {
     const locations: Ref<GeoLocation[] | null> = ref(null)
-    const invalidLocations: Ref<Geolocation[] | null> = ref(null)
+    const invalidLocations = computed(() => {
+        return locations.value?.filter(location => !validate(location))
+    })
 
-    return { locations, invalidLocations }
+    return {locations, invalidLocations}
 })

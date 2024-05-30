@@ -46,7 +46,17 @@ const onFileUpload = (fileData: FileData) => {
         @file-upload="onFileUpload"
         @file-upload-error="onUploadError"
     ></FileUploader>
-    <e-notification v-show="locationStore.invalidLocations" class="e-margin-top-l" type="error">
+    <e-notification v-show="locationStore.locations" class="e-margin-top-l" type="info">
+      <e-notification-content>
+        Your uploaded file contains {{ locationStore.locations?.length }} locations. You can add more in the next step.
+      </e-notification-content>
+    </e-notification>
+    <e-notification v-show="!locationStore.hasInvalidLocations && locationStore.locations" class="e-margin-top-l" type="success">
+      <e-notification-content>
+        Your uploaded file contains valid locations only.
+      </e-notification-content>
+    </e-notification>
+    <e-notification v-show="locationStore.hasInvalidLocations" class="e-margin-top-l" type="error">
       <e-notification-content>
         <p class="text-color-error">
           Your uploaded file contains {{ locationStore.invalidLocations?.length }} invalid locations based on
@@ -54,7 +64,7 @@ const onFileUpload = (fileData: FileData) => {
         </p>
         <ul class="text-color-error">
           <li v-for="location in locationStore.invalidLocations" :key="JSON.stringify(location)">
-            {{location.desc}} - Latitude {{location.lat}}, Longitude: {{ location.lon}}
+            {{ location.desc }} - Latitude {{ location.lat }}, Longitude: {{ location.lon }}
           </li>
         </ul>
       </e-notification-content>

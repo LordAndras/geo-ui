@@ -8,6 +8,9 @@ export const useGeoLocationsStore = defineStore('geoLocationsStore', () => {
     const invalidLocations = computed(() => {
         return locations.value?.filter(location => !validate(location))
     })
+    const hasInvalidLocations = computed(() => {
+        return !!invalidLocations.value && invalidLocations.value.length > 0
+    })
 
-    return {locations, invalidLocations}
+    return {locations, invalidLocations, hasInvalidLocations}
 })

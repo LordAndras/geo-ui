@@ -35,11 +35,30 @@ const onFileUpload = (fileData: FileData) => {
     <div class="e-section__title">Upload Geolocations CSV</div>
   </div>
   <div class="e-section__content">
+    <e-notification class="e-margin-bottom-l" type="info">
+      <e-notification-content>
+        Select a file in CSV format to import your geolocations. If you do not have a file, please proceed to the next
+        step.
+      </e-notification-content>
+    </e-notification>
     <FileUploader
         :placeHolder="fileStore.fileName"
         @file-upload="onFileUpload"
         @file-upload-error="onUploadError"
     ></FileUploader>
+    <e-notification v-show="locationStore.invalidLocations" class="e-margin-top-l" type="error">
+      <e-notification-content>
+        <p class="text-color-error">
+          Your uploaded file contains {{ locationStore.invalidLocations?.length }} invalid locations based on
+          longitude and latitude values. You can fix these values in the next step.
+        </p>
+        <ul class="text-color-error">
+          <li v-for="location in locationStore.invalidLocations" :key="JSON.stringify(location)">
+            {{location.desc}} - Latitude {{location.lat}}, Longitude: {{ location.lon}}
+          </li>
+        </ul>
+      </e-notification-content>
+    </e-notification>
   </div>
   <span v-if="!isValid" class="e-field__message e-field__message-error">
         <span>{{ 'This file is not a CSV.' }}</span>

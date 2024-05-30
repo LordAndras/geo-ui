@@ -6,7 +6,7 @@ export interface GeoLocation {
     alt: number,
     rad: number,
     trigger: string,
-    description: string
+    desc: string
 }
 
 export function parse(content: string): GeoLocation[] {

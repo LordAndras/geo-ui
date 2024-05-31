@@ -41,7 +41,7 @@ function addMarkers() {
 }
 
 onMounted(() => {
-  initialMap.value = L.map('map').setView([locationStore.centerLocation.lat, locationStore.centerLocation.lon], 7);
+  initialMap.value = L.map('map', { zoomControl: false}).setView([locationStore.centerLocation.lat, locationStore.centerLocation.lon], 7);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'

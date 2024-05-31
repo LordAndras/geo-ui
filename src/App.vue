@@ -7,6 +7,7 @@ import GeolocationUpload from "./views/GeolocationUpload.vue";
 import GeolocationList from "./views/GeolocationList.vue";
 import GeoMap from "./views/GeoMap.vue";
 import {useGeoCsvStore} from "./store/geo-csv-store.ts";
+import MainHeader from "./components/MainHeader.vue";
 
 const steps = ref(cloneDeep(editorSteps))
 
@@ -21,50 +22,42 @@ const fileStore = useGeoCsvStore()
 </script>
 
 <template>
-  <div class="e-layout">
-    <header class="e-layout__header e-layout__header-form">
-      <a class="e-layout__back" href="#">
-        <e-layout-back-button>Go to Geolocation overview</e-layout-back-button>
-      </a>
-      <h1 class="e-layout__title">Geolocations</h1>
-    </header>
-    <main>
-      <section v-if="steps[0].selected" class="e-layout__section e-padding-l">
-        <GeolocationUpload :is-valid="fileStore.isValid"/>
-      </section>
-      <section v-if="steps[1].selected" class="e-layout__content e-padding-l">
-        <div class="e-layout__section e-layout__section-sidebar e-padding-l">
-          <div class="e-section__header">
-            <div class="e-section__title">Geolocations</div>
-          </div>
-          <div class="e-section__content">
-            <GeolocationList/>
-          </div>
-        </div>
-        <section class="e-layout__section e-padding-l">
-          <div class="e-section__header">
-            <div class="e-section__title">Edit geolocations</div>
-          </div>
-          <div class="e-section__content">
-            <GeoMap/>
-          </div>
-        </section>
-      </section>
-      <section v-if="steps[2].selected" class="e-layout__section e-padding-l">
+  <MainHeader>
+    <section v-if="steps[0].selected" class="e-layout__section e-padding-l">
+      <GeolocationUpload :is-valid="fileStore.isValid"/>
+    </section>
+    <section v-if="steps[1].selected" class="e-layout__content e-padding-l">
+      <div class="e-layout__section e-layout__section-sidebar e-padding-l">
         <div class="e-section__header">
-          <div class="e-section__title">Finalize</div>
+          <div class="e-section__title">Geolocations</div>
         </div>
-        <div class="e-section__content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis odio sequi
-          consectetur perspiciatis, voluptate! Quasi velit ad, mollitia maxime doloribus est! Asperiores cupiditate
-          illum non distinctio deleniti dolorem impedit. Eum. Lorem ipsum dolor sit amet, consectetur adipisicing
-          elit.
+        <div class="e-section__content">
+          <GeolocationList/>
+        </div>
+      </div>
+      <section class="e-layout__section e-padding-l">
+        <div class="e-section__header">
+          <div class="e-section__title">Edit geolocations</div>
+        </div>
+        <div class="e-section__content">
+          <GeoMap/>
         </div>
       </section>
-      <e-step-bar floating>
-        <e-step v-for="step in steps" :key="step.toString()" :label="step.label" :disabled="!fileStore.isValid"
-                @trigger="goToStep(step.index)"
-                :selected="`${step.selected}`"></e-step>
-      </e-step-bar>
-    </main>
-  </div>
+    </section>
+    <section v-if="steps[2].selected" class="e-layout__section e-padding-l">
+      <div class="e-section__header">
+        <div class="e-section__title">Finalize</div>
+      </div>
+      <div class="e-section__content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis odio sequi
+        consectetur perspiciatis, voluptate! Quasi velit ad, mollitia maxime doloribus est! Asperiores cupiditate
+        illum non distinctio deleniti dolorem impedit. Eum. Lorem ipsum dolor sit amet, consectetur adipisicing
+        elit.
+      </div>
+    </section>
+    <e-step-bar floating>
+      <e-step v-for="step in steps" :key="step.toString()" :label="step.label" :disabled="!fileStore.isValid"
+              @trigger="goToStep(step.index)"
+              :selected="`${step.selected}`"></e-step>
+    </e-step-bar>
+  </MainHeader>
 </template>

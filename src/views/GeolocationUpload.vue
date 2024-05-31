@@ -35,17 +35,17 @@ const onFileUpload = (fileData: FileData) => {
     <div class="e-section__title">Upload Geolocations CSV</div>
   </div>
   <div class="e-section__content">
-    <e-notification class="e-margin-bottom-l" type="info">
-      <e-notification-content>
-        Select a file in CSV format to import your geolocations. If you do not have a file, please proceed to the next
-        step.
-      </e-notification-content>
-    </e-notification>
     <FileUploader
         :placeHolder="fileStore.fileName"
         @file-upload="onFileUpload"
         @file-upload-error="onUploadError"
     ></FileUploader>
+    <e-notification v-show="!locationStore.locations" class="e-margin-bottom-l e-margin-top-l" type="info">
+      <e-notification-content>
+        Select a file in CSV format to import your geolocations. If you do not have a file, please proceed to the next
+        step.
+      </e-notification-content>
+    </e-notification>
     <e-notification v-show="locationStore.locations" class="e-margin-top-l" type="info">
       <e-notification-content>
         Your uploaded file contains {{ locationStore.locations?.length }} locations. You can add more in the next step.

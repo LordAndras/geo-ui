@@ -5,6 +5,7 @@ import {validate} from "../lib/utils/geo-location-validator.ts";
 
 export const useGeoLocationsStore = defineStore('geoLocationsStore', () => {
     const locations: Ref<GeoLocation[] | null> = ref(null)
+    const selectedLocation: Ref<GeoLocation | undefined> = ref(undefined)
     const validLocations = computed(() => {
         return locations.value?.filter(location => validate(location))
     })
@@ -26,5 +27,5 @@ export const useGeoLocationsStore = defineStore('geoLocationsStore', () => {
         return { lat, lon, desc: "center" }
     })
 
-    return {locations, validLocations, invalidLocations, hasInvalidLocations, centerLocation}
+    return {locations, selectedLocation, validLocations, invalidLocations, hasInvalidLocations, centerLocation}
 })

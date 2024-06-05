@@ -4,7 +4,7 @@ import {computed} from "vue";
 
 interface TextInputProps {
   formId: string
-  value: string
+  value: number
   label: string
   disabled?: boolean
 }
@@ -15,11 +15,11 @@ const props = withDefaults(defineProps<TextInputProps>(), {
 const initial = computed(() => props.value)
 
 const emits = defineEmits<{
-  (event: 'onValueChange', changeEvent: { formId: string, value: string }): void
+  (event: 'onValueChange', changeEvent: { formId: string, value: number }): void
 }>()
 
 function updateValue(event: Event) {
-  emits('onValueChange', {formId: props.formId, value: (event.target as HTMLInputElement).value})
+  emits('onValueChange', {formId: props.formId, value: Number((event.target as HTMLInputElement).value)})
 }
 </script>
 
@@ -29,7 +29,7 @@ function updateValue(event: Event) {
       {{ label }}
     </label>
     <input class="e-input"
-           type="text"
+           type="number"
            placeholder="Type stuff here"
            :value="initial"
            :disabled="disabled"
@@ -37,3 +37,4 @@ function updateValue(event: Event) {
     >
   </div>
 </template>
+

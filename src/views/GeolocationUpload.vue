@@ -40,18 +40,18 @@ const onFileUpload = (fileData: FileData) => {
         @file-upload="onFileUpload"
         @file-upload-error="onUploadError"
     ></FileUploader>
-    <e-notification v-show="!locationStore.locations" class="e-margin-bottom-l e-margin-top-l" type="info">
+    <e-notification v-show="locationStore.locations.length == 0" class="e-margin-bottom-l e-margin-top-l" type="info">
       <e-notification-content>
         Select a file in CSV format to import your geolocations. If you do not have a file, please proceed to the next
         step.
       </e-notification-content>
     </e-notification>
-    <e-notification v-show="locationStore.locations" class="e-margin-top-l" type="info">
+    <e-notification v-show="locationStore.locations.length != 0" class="e-margin-top-l" type="info">
       <e-notification-content>
-        Your uploaded file contains {{ locationStore.locations?.length }} locations. You can add more in the next step.
+        Your uploaded file contains {{ locationStore.locations.length }} locations. You can add more in the next step.
       </e-notification-content>
     </e-notification>
-    <e-notification v-show="!locationStore.hasInvalidLocations && locationStore.locations" class="e-margin-top-l" type="success">
+    <e-notification v-show="!locationStore.hasInvalidLocations && locationStore.locations.length != 0" class="e-margin-top-l" type="success">
       <e-notification-content>
         Your uploaded file contains valid locations only.
       </e-notification-content>
@@ -59,7 +59,7 @@ const onFileUpload = (fileData: FileData) => {
     <e-notification v-show="locationStore.hasInvalidLocations" class="e-margin-top-l" type="error">
       <e-notification-content>
         <p class="text-color-error">
-          Your uploaded file contains {{ locationStore.invalidLocations?.length }} invalid locations based on
+          Your uploaded file contains {{ locationStore.invalidLocations.length }} invalid locations based on
           longitude and latitude values. You can fix these values in the next step.
         </p>
         <ul class="text-color-error">

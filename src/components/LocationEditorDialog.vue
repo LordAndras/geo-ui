@@ -6,7 +6,6 @@ import {GeoLocation} from "../lib/utils/geo-csv-parser.ts";
 import NumberInput from "./NumberInput.vue";
 
 const selectedLocationStore = useSelectedLocationStore()
-const isEditorDisabled = ref(true)
 
 const lat = ref(selectedLocationStore.selectedLocation?.lat ?? 0)
 const lon = ref(selectedLocationStore.selectedLocation?.lon ?? 0)
@@ -18,10 +17,6 @@ const desc = ref(selectedLocationStore.selectedLocation?.desc ?? '')
 const emits = defineEmits<{
   (event: 'onLocationSave', location: GeoLocation): void
 }>()
-
-function enableEditor() {
-  isEditorDisabled.value = false
-}
 
 function updateModelText(event: { formId: string, value: string }) {
   if (event.formId == 'desc') {
@@ -58,17 +53,9 @@ const onDialogOpen = () => {
 }
 
 const onImageDialogClose = () => {
-  lat.value = 0
-  lon.value = 0
-  alt.value = 0
-  rad.value = 0
-  trigger.value = ''
-  desc.value = ''
-  isEditorDisabled.value = true
 }
 
 function onCancel() {
-  isEditorDisabled.value = true
 }
 
 function onSave() {
@@ -80,7 +67,6 @@ function onSave() {
     trigger: trigger.value ?? '',
     desc: desc.value ?? ''
   })
-  isEditorDisabled.value = true
 }
 </script>
 
@@ -93,43 +79,40 @@ function onSave() {
       'dialog.close': onImageDialogClose
     }"
       no-close>
-    <e-dialog-headline-slot>
-      <button class="e-btn" @click="enableEditor">Enable editing</button>
-    </e-dialog-headline-slot>
     <TextInput formId="desc"
                label="Description"
                :value="desc"
-               :disabled="isEditorDisabled"
+               :disabled="false"
                @onValueChange="updateModelText"/>
     <NumberInput formId="lat"
                  label="Latitude"
                  :value="lat"
                  type="number"
-                 :disabled="isEditorDisabled"
+                 :disabled="false"
                  @onValueChange="updateModelNumber"/>
     <NumberInput formId="lon"
                  :value="lon"
                  label="Longitude"
                  type="number"
-                 :disabled="isEditorDisabled"
+                 :disabled="false"
                  @onValueChange="updateModelNumber"/>
     <NumberInput formId="alt"
                  :value="alt"
                  label="Altitude"
                  type="number"
-                 :disabled="isEditorDisabled"
+                 :disabled="false"
                  @onValueChange="updateModelNumber"/>
     <NumberInput formId="rad"
                  :value="rad"
                  label="Radius"
-                 :disabled="isEditorDisabled"
+                 :disabled="false"
                  type="number"
                  @onValueChange="updateModelNumber"/>
     <TextInput formId="trigger"
                :value="trigger"
                label="Trigger"
                type="text"
-               :disabled="isEditorDisabled"
+               :disabled="false"
                @onValueChange="updateModelText"/>
     <e-dialog-footer>
       <e-dialog-footer-actions>

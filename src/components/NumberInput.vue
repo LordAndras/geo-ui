@@ -4,7 +4,7 @@ import {computed} from "vue";
 
 interface TextInputProps {
   formId: string
-  value: number
+  value?: number
   label: string
   disabled?: boolean
 }

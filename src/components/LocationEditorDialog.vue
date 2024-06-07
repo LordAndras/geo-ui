@@ -1,55 +1,43 @@
 <script setup lang="ts">
 import TextInput from "./TextInput.vue";
-import {ref} from "vue";
+import {computed} from "vue";
 import {useSelectedLocationStore} from "../store/selected-location-store.ts";
-import {GeoLocation} from "../lib/utils/geo-csv-parser.ts";
 import NumberInput from "./NumberInput.vue";
 
 const selectedLocationStore = useSelectedLocationStore()
-
-const lat = ref(selectedLocationStore.selectedLocation?.lat ?? 0)
-const lon = ref(selectedLocationStore.selectedLocation?.lon ?? 0)
-const alt = ref(selectedLocationStore.selectedLocation?.alt ?? 0)
-const rad = ref(selectedLocationStore.selectedLocation?.rad ?? 0)
-const trigger = ref(selectedLocationStore.selectedLocation?.trigger ?? '')
-const desc = ref(selectedLocationStore.selectedLocation?.desc ?? '')
+const editedLocation = computed(() => selectedLocationStore.selectedLocation)
 
 const emits = defineEmits<{
-  (event: 'onLocationSave', location: GeoLocation): void
+  (event: 'onLocationSave'): void
 }>()
 
 function updateModelText(event: { formId: string, value: string }) {
   if (event.formId == 'desc') {
-    desc.value = event.value
+    selectedLocationStore.editedLocation!.desc = event.value
   } else {
-    trigger.value = event.value
+    selectedLocationStore.editedLocation!.trigger = event.value
   }
 }
 
 function updateModelNumber(event: { formId: string, value: number }) {
   switch (event.formId) {
     case 'lat':
-      lat.value = event.value
+      selectedLocationStore.editedLocation!.lat = event.value
       break
     case 'lon':
-      lon.value = event.value
+      selectedLocationStore.editedLocation!.lon = event.value
       break
     case 'alt':
-      alt.value = event.value
+      selectedLocationStore.editedLocation!.alt = event.value
       break
     case 'rad':
-      rad.value = event.value
+      selectedLocationStore.editedLocation!.rad = event.value
       break
   }
 }
 
 const onDialogOpen = () => {
-  lat.value = selectedLocationStore.selectedLocation?.lat ?? 0
-  lon.value = selectedLocationStore.selectedLocation?.lon ?? 0
-  alt.value = selectedLocationStore.selectedLocation?.alt ?? 0
-  rad.value = selectedLocationStore.selectedLocation?.rad ?? 0
-  trigger.value = selectedLocationStore.selectedLocation?.trigger ?? ''
-  desc.value = selectedLocationStore.selectedLocation?.desc ?? ''
+
 }
 
 const onImageDialogClose = () => {
@@ -59,14 +47,7 @@ function onCancel() {
 }
 
 function onSave() {
-  emits('onLocationSave', {
-    lat: Number(lat.value ?? 0),
-    lon: Number(lon.value ?? 0),
-    alt: Number(alt.value ?? 0),
-    rad: Number(rad.value ?? 0),
-    trigger: trigger.value ?? '',
-    desc: desc.value ?? ''
-  })
+  emits('onLocationSave')
 }
 </script>
 
@@ -81,35 +62,35 @@ function onSave() {
       no-close>
     <TextInput formId="desc"
                label="Description"
-               :value="desc"
+               :value="editedLocation?.desc"
                :disabled="false"
                @onValueChange="updateModelText"/>
     <NumberInput formId="lat"
                  label="Latitude"
-                 :value="lat"
+                 :value="editedLocation?.lat"
                  type="number"
                  :disabled="false"
                  @onValueChange="updateModelNumber"/>
     <NumberInput formId="lon"
-                 :value="lon"
+                 :value="editedLocation?.lon"
                  label="Longitude"
                  type="number"
                  :disabled="false"
                  @onValueChange="updateModelNumber"/>
     <NumberInput formId="alt"
-                 :value="alt"
+                 :value="editedLocation?.alt"
                  label="Altitude"
                  type="number"
                  :disabled="false"
                  @onValueChange="updateModelNumber"/>
     <NumberInput formId="rad"
-                 :value="rad"
+                 :value="editedLocation?.rad"
                  label="Radius"
                  :disabled="false"
                  type="number"
                  @onValueChange="updateModelNumber"/>
     <TextInput formId="trigger"
-               :value="trigger"
+               :value="editedLocation?.trigger"
                label="Trigger"
                type="text"
                :disabled="false"

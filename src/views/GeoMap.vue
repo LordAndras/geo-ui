@@ -14,7 +14,7 @@ const locationStore = useGeoLocationsStore()
 const selectedLocationStore = useSelectedLocationStore()
 const markers = computed(() => {
   let result: Marker[] = []
-  locationStore.locations.forEach((location: GeoLocation) => {
+  locationStore.validLocations.forEach((location: GeoLocation) => {
     result.push(L.marker([location.lat, location.lon]).on('click', selectLocation).bindTooltip(
         `<p>${location.desc}</p>`, {direction: "top"}))
   })
@@ -23,7 +23,7 @@ const markers = computed(() => {
 const clickedMarker: Ref<Marker | undefined> = ref()
 
 function selectLocation(e: LeafletMouseEvent) {
-  const clickedLocation = locationStore.locations.find((location: GeoLocation) =>
+  const clickedLocation = locationStore.validLocations.find((location: GeoLocation) =>
       location.lon == e.latlng.lng && location.lat == e.latlng.lat
   )
   selectedLocationStore.selectedLocation = cloneDeep(clickedLocation)
@@ -67,13 +67,13 @@ function addMarkers() {
 
 function updateMarker(location: GeoLocation | undefined) {
   if (clickedMarker.value && location) {
-    clickedMarker.value.setLatLng([location.lat, location.lon])
+    clickedMarker.value.setLatLng([location.lat, location.lon]).setTooltipContent(`<p>${location.desc}</p>`)
   }
 }
 
 function updateSelectedLocation() {
   updateMarker(selectedLocationStore.editedLocation)
-  locationStore.locations[selectedLocationStore.selectedIndex] = selectedLocationStore.editedLocation!
+  locationStore.validLocations[selectedLocationStore.selectedIndex] = cloneDeep(selectedLocationStore.editedLocation!)
   selectedLocationStore.resetStore()
 }
 

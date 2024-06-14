@@ -41,6 +41,7 @@ const onDialogOpen = () => {
 }
 
 const onImageDialogClose = () => {
+  selectedLocationStore.resetStore()
 }
 
 function onCancel() {

@@ -9,6 +9,7 @@ export const useSelectedLocationStore = defineStore('selected-location', () => {
     function resetStore() {
         selectedLocation.value = undefined
         editedLocation.value = undefined
+        selectedIndex.value = -1
     }
     return {selectedLocation, editedLocation, selectedIndex, resetStore}
 })

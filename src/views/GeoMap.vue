@@ -9,6 +9,7 @@ import {useSelectedLocationStore} from "../store/selected-location-store.ts";
 import LocationEditorDialog from "../components/LocationEditorDialog.vue";
 import {useGeoMarkerStore} from "../store/geo-marker-store.ts";
 import {cloneDeep} from "lodash-es";
+import {openDialog} from "../lib/dialog/dialog-opener.ts";
 
 const initialMap: Ref<L.Map | null> = ref(null);
 const locationStore = useGeoLocationsStore()
@@ -32,38 +33,55 @@ function selectLocation(e: LeafletMouseEvent) {
     selectedLocationStore.selectedIndex = locationStore.locations.indexOf(selectedLocationStore.selectedLocation) ?? -1
     geoMarkerStore.clickedMarker = findMarker(selectedLocationStore.selectedLocation)
   }
-  document.getElementById('dialogOpener')?.click()
+  openDialog('dialogOpener')
 }
 
 function findMarker(location: GeoLocation): Marker | undefined {
-  let marker: Marker | undefined
-  initialMap.value!.eachLayer((layer: Layer) => {
-    if (layer instanceof Marker && layer.options.title == location.desc) {
-      marker = layer
-    }
-  })
-  return marker
+  return markers.value.find((marker: Marker) => marker.options.title == location.desc)
 }
 
 function addMarkers() {
   if (initialMap.value) {
     markers.value.forEach((marker: Marker) => {
-      marker.addTo(initialMap.value!)
+      initialMap.value?.addLayer(marker)
     })
   }
 }
 
-function updateMarker(location: GeoLocation | undefined) {
-  if (geoMarkerStore.clickedMarker && location) {
-    geoMarkerStore.clickedMarker.setLatLng([location.lat, location.lon]).setTooltipContent(`<p>${location.desc}</p>`).closePopup()
+function addNewMarker(event: LeafletMouseEvent) {
+  const newLocation: GeoLocation = {
+    alt: 0, desc: "New location", lat: event.latlng.lat, lon: event.latlng.lng, rad: 250, trigger: "ENTER"
+  }
+  selectedLocationStore.selectedLocation = newLocation
+  selectedLocationStore.editedLocation = cloneDeep(newLocation)
+  openDialog('dialogOpener')
+}
+
+function updateMarker(location: GeoLocation) {
+  if (geoMarkerStore.clickedMarker && initialMap.value) {
+    initialMap.value.eachLayer((layer: Layer) => {
+      if (layer instanceof Marker && layer.options.title == geoMarkerStore.clickedMarker?.options.title) {
+        initialMap.value?.removeLayer(layer)
+      }
+    })
+    L.marker([location.lat, location.lon], {title: location.desc}).bindTooltip(`<p>${location.desc}</p>`).on('click', selectLocation).addTo(initialMap.value)
+  } else if (initialMap.value) {
+    L.marker([location.lat, location.lon], {title: location.desc}).bindTooltip(`<p>${location.desc}</p>`).on('click', selectLocation).addTo(initialMap.value)
   }
   geoMarkerStore.clickedMarker = undefined
 }
 
 function updateSelectedLocation() {
-  updateMarker(selectedLocationStore.editedLocation)
-  locationStore.locations[selectedLocationStore.selectedIndex] = selectedLocationStore.editedLocation!
+  if (selectedLocationStore.editedLocation) {
+    updateMarker(selectedLocationStore.editedLocation)
+    if (selectedLocationStore.selectedIndex === -1) {
+      locationStore.locations.push(selectedLocationStore.editedLocation)
+    } else {
+      locationStore.locations[selectedLocationStore.selectedIndex] = selectedLocationStore.editedLocation
+    }
+  }
   selectedLocationStore.resetStore()
+  geoMarkerStore.clickedMarker = undefined
 }
 
 onMounted(() => {
@@ -73,6 +91,9 @@ onMounted(() => {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(initialMap.value);
   addMarkers()
+  initialMap.value.on('click', (event: LeafletMouseEvent) => {
+    addNewMarker(event)
+  })
 });
 </script>
 

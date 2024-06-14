@@ -25,13 +25,9 @@ function selectLocation(e: LeafletMouseEvent) {
   selectedLocationStore.editedLocation = cloneDeep(selectedLocationStore.selectedLocation)
   if (selectedLocationStore.selectedLocation) {
     selectedLocationStore.selectedIndex = locationStore.locations.indexOf(selectedLocationStore.selectedLocation) ?? -1
-    geoMarkerStore.clickedMarker = findMarker(selectedLocationStore.selectedLocation)
+    geoMarkerStore.clickedMarker = mapStore.findMarkerForLocation(selectedLocationStore.selectedLocation)
   }
   openDialog('dialogOpener')
-}
-
-function findMarker(location: GeoLocation): Marker | undefined {
-  return mapStore.markers.find((marker: Marker) => marker.options.title == location.desc)
 }
 
 function addMarkers() {

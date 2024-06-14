@@ -84,6 +84,23 @@ function updateSelectedLocation() {
   geoMarkerStore.clickedMarker = undefined
 }
 
+function deleteSelectedLocation() {
+  if (selectedLocationStore.editedLocation) {
+    if (geoMarkerStore.clickedMarker && initialMap.value) {
+      initialMap.value.eachLayer((layer: Layer) => {
+        if (layer instanceof Marker && layer.options.title == geoMarkerStore.clickedMarker?.options.title) {
+          initialMap.value?.removeLayer(layer)
+        }
+      })
+    }
+    locationStore.locations = locationStore.locations.filter((location: GeoLocation) =>
+        location.desc != selectedLocationStore.editedLocation?.desc
+    )
+  }
+  selectedLocationStore.resetStore()
+  geoMarkerStore.clickedMarker = undefined
+}
+
 onMounted(() => {
   initialMap.value = L.map('map', {zoomControl: false}).setView([locationStore.centerLocation.lat, locationStore.centerLocation.lon], 7);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -100,6 +117,6 @@ onMounted(() => {
 <template>
   <div id="map" style="height:50vh;"></div>
   <e-dialoghandler id="dialogOpener" dialog="#edit-location"></e-dialoghandler>
-  <LocationEditorDialog @onLocationSave="updateSelectedLocation"/>
+  <LocationEditorDialog @onLocationSave="updateSelectedLocation" @onLocationDelete="deleteSelectedLocation"/>
 </template>
 

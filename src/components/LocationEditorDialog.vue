@@ -3,12 +3,15 @@ import TextInput from "./TextInput.vue";
 import {computed} from "vue";
 import {useSelectedLocationStore} from "../store/selected-location-store.ts";
 import NumberInput from "./NumberInput.vue";
+import {useGeoMarkerStore} from "../store/geo-marker-store.ts";
 
 const selectedLocationStore = useSelectedLocationStore()
+const geoMarkerStore = useGeoMarkerStore()
 const editedLocation = computed(() => selectedLocationStore.selectedLocation)
 
 const emits = defineEmits<{
   (event: 'onLocationSave'): void
+  (event: 'onLocationDelete'): void
 }>()
 
 function updateModelText(event: { formId: string, value: string }) {
@@ -50,17 +53,24 @@ function onCancel() {
 function onSave() {
   emits('onLocationSave')
 }
+
+function onDeleteLocation() {
+  emits('onLocationDelete')
+}
 </script>
 
 <template>
   <e-dialog
       id="edit-location"
-      headline="Dialog Title"
+      headline="Location Editor"
       v-on="{
       'dialog.open': onDialogOpen,
       'dialog.close': onImageDialogClose
     }"
       no-close>
+    <e-dialog-headline-slot>
+      <button class="e-btn" data-action="close" :disabled="!geoMarkerStore.clickedMarker" @click="onDeleteLocation">Delete location</button>
+    </e-dialog-headline-slot>
     <TextInput formId="desc"
                label="Description"
                :value="editedLocation?.desc"

@@ -2,7 +2,7 @@
 import "leaflet/dist/leaflet.css"
 import * as L from "leaflet"
 import {Layer, LeafletMouseEvent, Marker} from "leaflet"
-import {computed, onMounted, ref, Ref} from "vue";
+import {onMounted, ref, Ref} from "vue";
 import {useGeoLocationsStore} from "../store/geo-locations-store.ts";
 import {GeoLocation} from "../lib/utils/geo-csv-parser.ts";
 import {useSelectedLocationStore} from "../store/selected-location-store.ts";
@@ -10,19 +10,13 @@ import LocationEditorDialog from "../components/LocationEditorDialog.vue";
 import {useGeoMarkerStore} from "../store/geo-marker-store.ts";
 import {cloneDeep} from "lodash-es";
 import {openDialog} from "../lib/dialog/dialog-opener.ts";
+import {useMapStore} from "../store/map-store.ts";
 
 const initialMap: Ref<L.Map | null> = ref(null);
 const locationStore = useGeoLocationsStore()
 const selectedLocationStore = useSelectedLocationStore()
 const geoMarkerStore = useGeoMarkerStore()
-const markers = computed(() => {
-  let result: Marker[] = []
-  locationStore.validLocations.forEach((location: GeoLocation) => {
-    result.push(L.marker([location.lat, location.lon], {title: location.desc}).on('click', selectLocation).bindTooltip(
-        `<p>${location.desc}</p>`, {direction: "top"}))
-  })
-  return result
-})
+const mapStore = useMapStore()
 
 function selectLocation(e: LeafletMouseEvent) {
   selectedLocationStore.selectedLocation = locationStore.locations.find((location: GeoLocation) =>
@@ -37,12 +31,13 @@ function selectLocation(e: LeafletMouseEvent) {
 }
 
 function findMarker(location: GeoLocation): Marker | undefined {
-  return markers.value.find((marker: Marker) => marker.options.title == location.desc)
+  return mapStore.markers.find((marker: Marker) => marker.options.title == location.desc)
 }
 
 function addMarkers() {
   if (initialMap.value) {
-    markers.value.forEach((marker: Marker) => {
+    mapStore.markers.forEach((marker: Marker) => {
+      marker.on('click', selectLocation)
       initialMap.value?.addLayer(marker)
     })
   }

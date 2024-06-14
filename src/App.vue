@@ -9,8 +9,11 @@ import GeoMap from "./views/GeoMap.vue";
 import {useGeoCsvStore} from "./store/geo-csv-store.ts";
 import MainHeader from "./components/MainHeader.vue";
 import TextInput from "./components/TextInput.vue";
+import {LocationOption, locationOptions} from "./lib/constants/LocationListFilter.ts";
 
+const fileStore = useGeoCsvStore()
 const steps = ref(cloneDeep(editorSteps))
+const selectedOption = ref(locationOptions[0])
 
 function goToStep(index: number) {
   steps.value.forEach((step) => {
@@ -18,8 +21,10 @@ function goToStep(index: number) {
   })
 }
 
-const fileStore = useGeoCsvStore()
-
+function onOptionChanged(event: {detail: {value: string}}) {
+  locationOptions.forEach((option: LocationOption) => option.isSelected = option.value == event.detail.value)
+  selectedOption.value = locationOptions.find((option: LocationOption) => option.value == event.detail.value) ?? locationOptions[0]
+}
 </script>
 
 <template>
@@ -33,7 +38,17 @@ const fileStore = useGeoCsvStore()
           <div class="e-section__title">Geolocations</div>
         </div>
         <div class="e-section__content">
-          <GeolocationList/>
+          <e-select id="locationFilter" placeholder="Select filter option" @change="onOptionChanged">
+            <e-select-option v-for="option in locationOptions"
+                             :key="option.value"
+                             :value="option.value"
+                             :selected="option.isSelected">
+              {{ option.label }}
+            </e-select-option>
+          </e-select>
+        </div>
+        <div class="e-section__content">
+          <GeolocationList :locationOption="selectedOption.value" />
         </div>
       </div>
       <section class="e-layout__section e-padding-l">

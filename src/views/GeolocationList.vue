@@ -3,8 +3,23 @@ import {useGeoLocationsStore} from "../store/geo-locations-store.ts";
 import {GeoLocation} from "../lib/utils/geo-csv-parser.ts";
 import {computed} from "vue";
 
+interface Props {
+  locationOption: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  locationOption: 'all',
+})
+const selectedLocationOption = computed(() => props.locationOption)
+
 const locationStore = useGeoLocationsStore()
-const locations = computed(() => locationStore.locations)
+const locations = computed(() => {
+  switch (selectedLocationOption.value) {
+    case 'all': return locationStore.locations
+    case 'invalid': return locationStore.invalidLocations
+    case 'valid': return locationStore.validLocations
+  }
+})
 
 function isLocationValid(location: GeoLocation): boolean {
   return locationStore.invalidLocations?.includes(location) ?? false

@@ -8,6 +8,7 @@ import GeolocationList from "./views/GeolocationList.vue";
 import GeoMap from "./views/GeoMap.vue";
 import {useGeoCsvStore} from "./store/geo-csv-store.ts";
 import MainHeader from "./components/MainHeader.vue";
+import TextInput from "./components/TextInput.vue";
 
 const steps = ref(cloneDeep(editorSteps))
 
@@ -40,6 +41,7 @@ const fileStore = useGeoCsvStore()
           <div class="e-section__title">Edit geolocations</div>
         </div>
         <div class="e-section__content">
+          <TextInput form-id="address" label="Search location" :disabled="false"/>
           <GeoMap/>
         </div>
       </section>

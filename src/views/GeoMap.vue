@@ -1,44 +1,48 @@
 <script setup lang="ts">
 import "leaflet/dist/leaflet.css"
 import * as L from "leaflet"
-import {LeafletMouseEvent, Marker} from "leaflet"
+import {Layer, LeafletMouseEvent, Marker} from "leaflet"
 import {computed, onMounted, ref, Ref} from "vue";
 import {useGeoLocationsStore} from "../store/geo-locations-store.ts";
 import {GeoLocation} from "../lib/utils/geo-csv-parser.ts";
 import {useSelectedLocationStore} from "../store/selected-location-store.ts";
 import LocationEditorDialog from "../components/LocationEditorDialog.vue";
+import {useGeoMarkerStore} from "../store/geo-marker-store.ts";
 import {cloneDeep} from "lodash-es";
 
 const initialMap: Ref<L.Map | null> = ref(null);
 const locationStore = useGeoLocationsStore()
 const selectedLocationStore = useSelectedLocationStore()
+const geoMarkerStore = useGeoMarkerStore()
 const markers = computed(() => {
   let result: Marker[] = []
   locationStore.validLocations.forEach((location: GeoLocation) => {
-    result.push(L.marker([location.lat, location.lon]).on('click', selectLocation).bindTooltip(
+    result.push(L.marker([location.lat, location.lon], {title: location.desc}).on('click', selectLocation).bindTooltip(
         `<p>${location.desc}</p>`, {direction: "top"}))
   })
   return result
 })
-const clickedMarker: Ref<Marker | undefined> = ref()
 
 function selectLocation(e: LeafletMouseEvent) {
-  const clickedLocation = locationStore.validLocations.find((location: GeoLocation) =>
+  selectedLocationStore.selectedLocation = locationStore.locations.find((location: GeoLocation) =>
       location.lon == e.latlng.lng && location.lat == e.latlng.lat
   )
-  selectedLocationStore.selectedLocation = cloneDeep(clickedLocation)
-  selectedLocationStore.editedLocation = cloneDeep(clickedLocation)
-  if (clickedLocation) {
-    selectedLocationStore.selectedIndex = locationStore.locations.indexOf(clickedLocation) ?? -1
-    clickedMarker.value = findMarker(clickedLocation)
+  selectedLocationStore.editedLocation = cloneDeep(selectedLocationStore.selectedLocation)
+  if (selectedLocationStore.selectedLocation) {
+    selectedLocationStore.selectedIndex = locationStore.locations.indexOf(selectedLocationStore.selectedLocation) ?? -1
+    geoMarkerStore.clickedMarker = findMarker(selectedLocationStore.selectedLocation)
   }
   document.getElementById('dialogOpener')?.click()
 }
 
 function findMarker(location: GeoLocation): Marker | undefined {
-  return markers.value.find((marker: L.Marker) =>
-      marker.getLatLng().lat == location.lat && marker.getLatLng().lng == location.lon
-  )
+  let marker: Marker | undefined
+  initialMap.value!.eachLayer((layer: Layer) => {
+    if (layer instanceof Marker && layer.options.title == location.desc) {
+      marker = layer
+    }
+  })
+  return marker
 }
 
 function addMarkers() {
@@ -48,32 +52,17 @@ function addMarkers() {
     })
   }
 }
-//
-// function addNewMarker(location: GeoLocation | undefined) {
-//   if (initialMap.value && location) {
-//     L.marker([location.lat, location.lon]).on('click', selectLocation).bindTooltip(
-//         `<p>${location.desc}</p>`, {direction: "top"}).addTo(initialMap.value)
-//   }
-// }
-//
-// function removeMarker(location: GeoLocation | undefined) {
-//   if (location && initialMap.value) {
-//     const marker = markers.value.find((marker: L.Marker) =>
-//         marker.getLatLng().lat == location.lat && marker.getLatLng().lng == location.lon
-//     ) ?? L.marker([0, 0])
-//     marker.removeFrom(initialMap.value)
-//   }
-// }
 
 function updateMarker(location: GeoLocation | undefined) {
-  if (clickedMarker.value && location) {
-    clickedMarker.value.setLatLng([location.lat, location.lon]).setTooltipContent(`<p>${location.desc}</p>`)
+  if (geoMarkerStore.clickedMarker && location) {
+    geoMarkerStore.clickedMarker.setLatLng([location.lat, location.lon]).setTooltipContent(`<p>${location.desc}</p>`).closePopup()
   }
+  geoMarkerStore.clickedMarker = undefined
 }
 
 function updateSelectedLocation() {
   updateMarker(selectedLocationStore.editedLocation)
-  locationStore.validLocations[selectedLocationStore.selectedIndex] = cloneDeep(selectedLocationStore.editedLocation!)
+  locationStore.locations[selectedLocationStore.selectedIndex] = selectedLocationStore.editedLocation!
   selectedLocationStore.resetStore()
 }
 

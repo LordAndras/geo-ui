@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import {computed, ref, Ref} from "vue";
 import {CenterLocation, GeoLocation} from "../lib/utils/geo-csv-parser.ts";
 import {validate} from "../lib/utils/geo-location-validator.ts";
+import {LeafletMouseEvent} from "leaflet";
 
 export const useGeoLocationsStore = defineStore('geoLocationsStore', () => {
     const locations: Ref<GeoLocation[]> = ref([])
@@ -12,7 +13,7 @@ export const useGeoLocationsStore = defineStore('geoLocationsStore', () => {
         return locations.value.filter(location => !validate(location))
     })
     const hasInvalidLocations = computed(() => {
-        return invalidLocations.value && invalidLocations.value.length > 0
+        return invalidLocations.value.length > 0
     })
     const centerLocation = computed((): CenterLocation => {
         let lon: number = 0
@@ -21,11 +22,36 @@ export const useGeoLocationsStore = defineStore('geoLocationsStore', () => {
             lon += location.lon
             lat += location.lat
         })
-        lon = (validLocations.value.length != 0) ? lon/validLocations.value.length : 19.2
-        lat = (validLocations.value.length != 0) ? lat/validLocations.value.length : 47.3
+        lon = (validLocations.value.length != 0) ? lon / validLocations.value.length : 19.2
+        lat = (validLocations.value.length != 0) ? lat / validLocations.value.length : 47.3
 
-        return { lat, lon, desc: "center" }
+        return {lat, lon, desc: "center"}
     })
 
-    return {locations, validLocations, invalidLocations, hasInvalidLocations, centerLocation}
+    function findLocationForClickedMarker(e: LeafletMouseEvent) {
+        return locations.value.find((location: GeoLocation) =>
+            location.lon == e.latlng.lng && location.lat == e.latlng.lat
+        )
+    }
+
+    function findLocationIndex(location: GeoLocation): number {
+        return locations.value.indexOf(location) ?? -1
+    }
+
+    function deleteLocation(description: string | undefined) {
+        locations.value = locations.value.filter((location: GeoLocation) =>
+            location.desc != description
+        )
+    }
+
+    return {
+        locations,
+        validLocations,
+        invalidLocations,
+        hasInvalidLocations,
+        centerLocation,
+        findLocationForClickedMarker,
+        findLocationIndex,
+        deleteLocation
+    }
 })

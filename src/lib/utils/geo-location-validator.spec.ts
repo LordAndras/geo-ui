@@ -9,7 +9,7 @@ describe('GeoLocationValidator', () => {
             lon: -45.2354,
             alt: 32.4,
             rad: 15.0,
-            description: 'testing',
+            desc: 'testing',
             trigger: 'enter'
         }
 
@@ -21,7 +21,7 @@ describe('GeoLocationValidator', () => {
             lon: -180.000,
             alt: 32.4,
             rad: 15.0,
-            description: 'testing',
+            desc: 'testing',
             trigger: 'enter'
         }
 
@@ -34,7 +34,7 @@ describe('GeoLocationValidator', () => {
             lon: -405.2354,
             alt: 32.4,
             rad: 15.0,
-            description: 'testing',
+            desc: 'testing',
             trigger: 'enter'
         }
 

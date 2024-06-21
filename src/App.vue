@@ -10,6 +10,7 @@ import {useGeoCsvStore} from "./store/geo-csv-store.ts";
 import MainHeader from "./components/MainHeader.vue";
 import TextInput from "./components/TextInput.vue";
 import {LocationOption, locationOptions} from "./lib/constants/LocationListFilter.ts";
+import FinalizeUpload from "./views/FinalizeUpload.vue";
 
 const fileStore = useGeoCsvStore()
 const steps = ref(cloneDeep(editorSteps))
@@ -21,7 +22,7 @@ function goToStep(index: number) {
   })
 }
 
-function onOptionChanged(event: {detail: {value: string}}) {
+function onOptionChanged(event: { detail: { value: string } }) {
   locationOptions.forEach((option: LocationOption) => option.isSelected = option.value == event.detail.value)
   selectedOption.value = locationOptions.find((option: LocationOption) => option.value == event.detail.value) ?? locationOptions[0]
 }
@@ -48,7 +49,7 @@ function onOptionChanged(event: {detail: {value: string}}) {
           </e-select>
         </div>
         <div class="e-section__content">
-          <GeolocationList :locationOption="selectedOption.value" />
+          <GeolocationList :locationOption="selectedOption.value"/>
         </div>
       </div>
       <section class="e-layout__section e-padding-l">
@@ -62,14 +63,7 @@ function onOptionChanged(event: {detail: {value: string}}) {
       </section>
     </section>
     <section v-if="steps[2].selected" class="e-layout__section e-padding-l">
-      <div class="e-section__header">
-        <div class="e-section__title">Finalize</div>
-      </div>
-      <div class="e-section__content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis odio sequi
-        consectetur perspiciatis, voluptate! Quasi velit ad, mollitia maxime doloribus est! Asperiores cupiditate
-        illum non distinctio deleniti dolorem impedit. Eum. Lorem ipsum dolor sit amet, consectetur adipisicing
-        elit.
-      </div>
+      <FinalizeUpload/>
     </section>
     <e-step-bar floating>
       <e-step v-for="step in steps" :key="step.toString()" :label="step.label" :disabled="!fileStore.isValid"

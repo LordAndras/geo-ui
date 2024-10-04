@@ -13,22 +13,16 @@ import {openDialog} from "../lib/dialog/dialog-opener.ts";
 import {useMapStore} from "../store/map-store.ts";
 
 const initialMap: Ref<L.Map | null> = ref(null);
-const {
-  locations,
-  centerLocation,
-  findLocationIndex,
-  findLocationForClickedMarker,
-  deleteLocation
-} = useGeoLocationsStore()
+const locationStore = useGeoLocationsStore()
 const selectedLocationStore = useSelectedLocationStore()
 const geoMarkerStore = useGeoMarkerStore()
 const mapStore = useMapStore()
 
 function selectLocation(event: LeafletMouseEvent) {
-  selectedLocationStore.selectedLocation = findLocationForClickedMarker(event)
+  selectedLocationStore.selectedLocation = locationStore.findLocationForClickedMarker(event)
   selectedLocationStore.editedLocation = cloneDeep(selectedLocationStore.selectedLocation)
   if (selectedLocationStore.selectedLocation) {
-    selectedLocationStore.selectedIndex = findLocationIndex(selectedLocationStore.selectedLocation)
+    selectedLocationStore.selectedIndex = locationStore.findLocationIndex(selectedLocationStore.selectedLocation)
     geoMarkerStore.clickedMarker = mapStore.findMarkerForLocation(selectedLocationStore.selectedLocation)
   }
   openDialog('dialogOpener')
@@ -75,9 +69,9 @@ function updateMarker(location: GeoLocation) {
 
 function upsertLocation(location: GeoLocation) {
   if (selectedLocationStore.selectedIndex === -1) {
-    locations.push(location)
+    locationStore.locations.push(location)
   } else {
-    locations[selectedLocationStore.selectedIndex] = location
+    locationStore.locations[selectedLocationStore.selectedIndex] = location
   }
 }
 
@@ -93,7 +87,7 @@ function onLocationSaved() {
 function onLocationDeleted() {
   if (selectedLocationStore.selectedLocation) {
     deleteMarker()
-    deleteLocation(selectedLocationStore.selectedLocation.desc)
+    locationStore.deleteLocation(selectedLocationStore.selectedLocation.desc)
     selectedLocationStore.resetStore()
     geoMarkerStore.clickedMarker = undefined
   }
@@ -110,7 +104,7 @@ function deleteMarker() {
 }
 
 onMounted(() => {
-  initialMap.value = L.map('map', {zoomControl: false}).setView([centerLocation.lat, centerLocation.lon], 7)
+  initialMap.value = L.map('map', {zoomControl: false}).setView([locationStore.centerLocation.lat, locationStore.centerLocation.lon], 7)
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'

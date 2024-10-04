@@ -1,5 +1,8 @@
 <script setup lang="ts">
 
+import {useGeoLocationsStore} from "../store/geo-locations-store.ts";
+
+const locationStore = useGeoLocationsStore()
 </script>
 
 <template>
@@ -19,13 +22,13 @@
         <td class="e-table__col e-table__col-nowrap">
           <div class="text-lineheight">
             <b class="text-color-error">
-              Your currently added or imported locations contain [some number here] invalid ones. Upload WILL filter out invalid locations.
+              Your currently added or imported  {{locationStore.locations.length}} locations. The list of locations contain {{locationStore.invalidLocations.length}} invalid ones. Upload WILL filter out invalid locations.
             </b>
             <p class="text-color-error">You can check, fix or remove these invalid locations in the previous step.</p>
           </div>
         </td>
       </tr>
-      <tr class="e-table__row">
+      <tr v-if="!locationStore.hasInvalidLocations" class="e-table__row">
         <td class="e-table__col">
           <e-icon icon="checkmark" color="green"/>
         </td>
@@ -44,7 +47,7 @@
         <td>
           <div class="text-lineheight">
             <b class="text-color-success">
-              Your currently uploaded, added or edited locations consist of 42  valid locations.
+              Your currently uploaded, added or edited locations consist of {{locationStore.validLocations.length}}  valid locations.
             </b>
           </div>
         </td>
@@ -56,7 +59,7 @@
         <td>
           <div class="text-lineheight">
             <b class="text-color-info">
-              You can export your your currently uploaded, added or edited locations in CSV by clicking this button. The exported data WILL contain ALL locations. Yes, the invalid ones too.
+              You can export your currently uploaded, added or edited locations in CSV by clicking this button. The exported data WILL contain ALL locations. Yes, the invalid ones too.
             </b>
           </div>
           <button class="e-btn e-btn-large e-margin-top-m">Click this here button to export</button>
